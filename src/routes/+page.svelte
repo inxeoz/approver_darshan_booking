@@ -1,60 +1,77 @@
-<script lang="ts">
-    import { Card, Button, Avatar } from "flowbite-svelte";
+<script>
+    // No script needed for this static background
 </script>
 
-<!-- nano Tailwind layout wrapper -->
-<div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <Card class="max-w-2xl w-full">
-        <div style="text-align:center;">
-            <Avatar
-                img="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Mahakaleshwar_Ujjain.jpg/320px-Mahakaleshwar_Ujjain.jpg"
-                size="xl"
-                bordered
-            />
+<style>
+    :global(html, body, #svelte) {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+    }
+    .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        z-index: -1;
+    }
 
-            <h2
-                style="font-size:1.8rem; font-weight:700; color:#673ab7; margin:1rem 0 0.5rem;"
-            >
-                Welcome
-            </h2>
+    .centered-text {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Georgia', serif;
+        font-size: 4rem;
+        color: #7a5c2e; /* warm dark brown */
+        user-select: none;
+        pointer-events: none;
+    }
+</style>
 
-            <p style="color:#444; max-width:480px; margin:0 auto 1.5rem;">
-                Visit the sacred
-                <span style="color:#8e24aa; font-weight:500"
-                    >@Mahakaal Darshan</span
-                >
-                or enjoy
-                <span style="color:#ffa000; font-weight:500">@VIP Darshan</span>
-                for a memorable experience.
-            </p>
+<div class="background" aria-hidden="true">
+    <svg
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMid slice"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+    >
+        <defs>
+            <filter id="noise" x="0" y="0" width="100%" height="100%">
+                <feTurbulence
+                        type="fractalNoise"
+                        baseFrequency="0.8"
+                        numOctaves="4"
+                        stitchTiles="stitch"
+                        result="turbulence"
+                />
+                <feColorMatrix
+                        in="turbulence"
+                        type="saturate"
+                        values="0"
+                        result="desaturatedNoise"
+                />
+                <feComponentTransfer in="desaturatedNoise" result="noiseAlpha">
+                    <feFuncA type="table" tableValues="0 0.2 0.8 1" />
+                </feComponentTransfer>
+                <feComposite in="noiseAlpha" in2="SourceGraphic" operator="over" />
+            </filter>
+        </defs>
 
-            <div
-                style="display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-bottom:1.5rem;"
-            >
-                <Card>
-                    <h3
-                        style="color:#673ab7; font-weight:600; margin-bottom:0.3rem;"
-                    >
-                        @Mahakaal Darshan
-                    </h3>
-                    <p style="font-size:0.9rem; color:#555;">
-                        Join regular devotees for blessings — family-friendly
-                        and open during standard hours.
-                    </p>
-                </Card>
+        <rect width="100%" height="100%" fill="#edf6f9" />
+        <rect
+                width="100%"
+                height="100%"
+                filter="url(#noise)"
+                opacity="0.15"
+        />
+    </svg>
+</div>
 
-                <Card>
-                    <h3
-                        style="color:#fbbf24; font-weight:600; margin-bottom:0.3rem;"
-                    >
-                        @VIP Darshan
-                    </h3>
-                    <p style="font-size:0.9rem; color:#555;">
-                        Faster entry with exclusive care, guided by temple
-                        staff, and special mementos.
-                    </p>
-                </Card>
-            </div>
-        </div>
-    </Card>
+
+<div class="centered-text" aria-label="Warm Welcome">
+    महाकाल दर्शन
 </div>

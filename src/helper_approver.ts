@@ -1,9 +1,9 @@
 const COMMON =
   "/api/method/mahakaal.darshan_booking.doctype.darshan_approver_profile.darshan_approver_profile.";
 
-export async function get_profile() {
+export async function get_self_profile() {
   try {
-    const res = await fetch(COMMON + "get_profile", {
+    const res = await fetch(COMMON + "get_self_profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -12,7 +12,8 @@ export async function get_profile() {
     });
 
     const data = await res.json();
-    return data;
+
+    return data?.message?.profile;
   } catch (err) {
     console.error("Error fetching profile details:", err);
 
@@ -75,7 +76,7 @@ export async function get_appointment(appointment_id: string) {
   }
 }
 
-export async function update_profile(info: {}, login_as: string) {
+export async function update_profile(info: {}) {
   try {
     const res = await fetch(COMMON + "update_profile", {
       method: "POST",
@@ -171,6 +172,50 @@ export async function reject_appointment(appointment_id: string) {
 
       body: JSON.stringify({
         appointment_id: appointment_id,
+      }),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (err: any) {
+    console.error(err);
+
+    return null;
+  }
+}
+
+export async function registration_approver(phone: number) {
+  try {
+    const res = await fetch(COMMON + "create_approver", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        phone: phone,
+      }),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (err: any) {
+    console.error(err);
+
+    return null;
+  }
+}
+
+export async function login_verify(phone: number, pwd: string) {
+  try {
+    const res = await fetch("/api/method/login", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        usr: phone + "",
+        pwd: pwd,
       }),
     });
 

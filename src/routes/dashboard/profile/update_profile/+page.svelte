@@ -1,15 +1,8 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { getCookieByName } from "@src/helper.js";
-    import { get_profile, update_profile } from "@src/helper_devoteee.js";
+    import { get_profile, update_profile } from "@src/helper_approver.js";
     import { onMount } from "svelte";
-
-    // progress shown in the thin bar under the header
-    export let progress = 80; // percent
-
-    // API defaults (override by passing props)
-    export let apiUrl =
-        "http://localhost:1880/create_or_update_devoteee_profile";
+    import { toast } from "svelte-sonner";
 
     let profle_data: any = null;
 
@@ -24,8 +17,6 @@
 
     let loading = false;
     let submitted = false;
-    let serverMessage = "";
-    let serverCode = "";
     let serverError = "";
 
     const errors = () => {
@@ -44,8 +35,6 @@
 
         loading = true;
         serverError = "";
-        serverMessage = "";
-        serverCode = "";
 
         // prepare payload (fixed aadhar)
         const info = {
@@ -58,21 +47,17 @@
 
         const json = await update_profile(info, "Devoteee");
 
-        // success
-        serverMessage = json?.message || "Profile saved.";
-        serverCode = (json && (json.code || json.status)) || "";
+        toast(json?.message || "Profile saved.");
         submitted = true;
     }
 
     function goToMyBookings() {
-        goto("/devoteee/mybooking");
+        goto("/dashboard/mybooking");
     }
 
     onMount(async () => {
         try {
-            const response = await get_profile();
-            // defensive: check structure
-            profle_data = response?.message?.profile ?? null;
+            profle_data = await get_profile();
 
             name = profle_data.devoteee_name;
             gender = profle_data.gender;
@@ -91,33 +76,23 @@
 
 <div class="page">
     <div class="card" role="region" aria-labelledby="title">
-        <div class="progress" aria-label="Progress">
-            <span
-                class="bar"
-                style="width: {Math.max(0, Math.min(100, progress))}%"
-            ></span>
-        </div>
-
         {#if submitted}
             <div class="submitted">
                 <h3>Successfully updated profile details</h3>
-                {#if serverMessage}
-                    <p class="copy">
-                        {serverMessage}
-                        {#if serverCode}(<strong>{serverCode}</strong>){/if}
-                    </p>
-                {/if}
 
-                <button class="btn primary" on:click={() => goto("/devoteee")}>
+                <button
+                    pill
+                    class="btn primary"
+                    on:click={() => goto("/dashboard")}
+                >
                     Dashboard
                 </button>
 
                 <button
-                    class="btn"
-                    style="margin-top:8px;"
-                    on:click={goToMyBookings}
+                    class="btn primary"
+                    on:click={() => goto("/dashboard/mybooking")}
                 >
-                    See your appointments
+                    My Bookings
                 </button>
             </div>
         {:else}
@@ -169,20 +144,19 @@
 
                 <!-- Date of Birth -->
                 <label class="label" for="dob">Date of Birth</label>
-                <div class="date-wrap">
-                    <input
-                        id="dob"
-                        class="input"
-                        class:invalid={touched.dob && errors().dob}
-                        type="date"
-                        bind:value={dob}
-                        on:blur={() => (touched.dob = true)}
-                        aria-invalid={touched.dob && errors().dob
-                            ? "true"
-                            : "false"}
-                    />
-                    <span class="calendar" aria-hidden="true">📅</span>
-                </div>
+
+                <input
+                    id="dob"
+                    class="input"
+                    class:invalid={touched.dob && errors().dob}
+                    type="date"
+                    bind:value={dob}
+                    on:blur={() => (touched.dob = true)}
+                    aria-invalid={touched.dob && errors().dob
+                        ? "true"
+                        : "false"}
+                />
+
                 {#if touched.dob && errors().dob}
                     <div class="error">{errors().dob}</div>
                 {/if}
@@ -223,17 +197,6 @@
                 </button>
             </form>
         {/if}
-
-        <button
-            class="back"
-            type="button"
-            on:click={() => window.history.back()}>← Back</button
-        >
-
-        <p class="footnote">
-            Already registered?
-            <a href="/login" class="link">Login with Mobile Number</a>
-        </p>
     </div>
 </div>
 
@@ -251,24 +214,12 @@
     }
     .card {
         width: min(640px, 92vw);
-        background: #fff;
+        background: #ecf3f2;
         border-radius: 14px;
         box-shadow: 0 10px 28px rgba(16, 24, 40, 0.12);
         padding: 36px 40px 32px;
     }
-    .progress {
-        height: 4px;
-        background: #e5e7eb;
-        border-radius: 999px;
-        overflow: hidden;
-        margin-top: 12px;
-    }
-    .bar {
-        display: block;
-        height: 100%;
-        background: #2151ea;
-        transition: width 0.25s ease;
-    }
+
     .heading {
         text-align: center;
         margin: 18px 0 6px;
@@ -321,18 +272,6 @@
         font-size: 12px;
         color: #b91c1c;
     }
-    .date-wrap {
-        position: relative;
-    }
-    .date-wrap .calendar {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-        font-size: 16px;
-        opacity: 0.7;
-    }
     .btn.primary {
         width: 100%;
         height: 46px;
@@ -348,26 +287,5 @@
     .btn.primary[disabled] {
         opacity: 0.7;
         cursor: default;
-    }
-    .back {
-        margin-top: 10px;
-        background: transparent;
-        border: 0;
-        color: #6b7280;
-        font-size: 14px;
-        cursor: pointer;
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
-    .footnote {
-        text-align: center;
-        margin: 14px 0 0;
-        color: #6b7280;
-        font-size: 13px;
-    }
-    .link {
-        color: #2151ea;
-        text-decoration: none;
     }
 </style>

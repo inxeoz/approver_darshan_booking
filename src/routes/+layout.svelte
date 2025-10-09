@@ -2,24 +2,61 @@
     // Import global CSS once
     import "../app.css";
 
+    import {
+        Breadcrumb,
+        Button,
+        Navbar,
+        NavHamburger,
+        NavBrand,
+        NavUl,
+        NavLi,
+    } from "flowbite-svelte";
+
     // Import Toaster once (global notifications)
     import { Toaster } from "svelte-sonner";
 </script>
 
-<!-- 🌐 Global navigation bar -->
-<nav class="bg-blue-500 text-white flex flex-wrap gap-x-4 px-4 py-3">
-    <a href="/" class="hover:underline">Home</a>
+<Navbar class="bg-sky-100 dark:bg-primary-700">
+    <NavBrand href="/" aria-label="Homepage">
+        <span class="self-center font-bold whitespace-nowrap dark:text-white">
+            Darshan Mahakaal
+        </span>
+    </NavBrand>
 
-    <a href="/devoteee/registration" class="hover:underline">Registration</a>
-    <a href="/login" class="hover:underline">Login</a>
+    <NavUl role="navigation" aria-label="Main navigation">
+        <NavLi href="/">Home</NavLi>
+        <NavLi href="/registration">Approver Registration</NavLi>
+        <NavLi href="/login">Login</NavLi>
+        <NavLi href="/dashboard">Dashboard</NavLi>
+        <NavLi href="/dashboard/profile">Profile</NavLi>
+    </NavUl>
 
-    <a href="/demo" class="hover:underline">Demo</a>
+    <NavHamburger aria-label="Toggle menu" />
 
-    <a href="/devoteee" class="hover:underline">Dashboard</a>
-    <a href="/approver" class="hover:underline">Approver</a>
-    <a href="/attender" class="hover:underline">attender</a>
-    <a href="/devoteee/profile" class="hover:underline">profile</a>
-</nav>
+    <div>
+        <Button
+            outline
+            pill
+            color="transparent"
+            class="ml-4 px-3 py-1 text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600"
+            onclick={() => window.history.back()}
+            aria-label="Go back"
+        >
+            Back
+        </Button>
+
+        <Button
+            outline
+            pill
+            color="transparent"
+            class="ml-4 px-3 py-1 text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600"
+            onclick={() => window.history.forward()}
+            aria-label="Go forward"
+        >
+            Next
+        </Button>
+    </div>
+</Navbar>
 
 <!-- 🧩 Every page will render inside this slot -->
 <slot />

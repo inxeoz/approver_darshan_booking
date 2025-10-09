@@ -182,3 +182,48 @@ export async function reject_appointment(appointment_id: string) {
     return null;
   }
 }
+
+export async function registration_approver(phone: number) {
+  try {
+    const res = await fetch(COMMON + "create_approver", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        phone: phone,
+      }),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (err: any) {
+    console.error(err);
+
+    return null;
+  }
+}
+
+export async function login_verify(phone: number, pwd: string) {
+  try {
+    const res = await fetch("/api/method/login", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        usr: phone + "",
+        // pwd: pwd,
+        pwd: "A12345678Hz",
+      }),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (err: any) {
+    console.error(err);
+
+    return null;
+  }
+}

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { Card, Avatar, Badge, Button } from "flowbite-svelte";
-    import { get_profile } from "@src/helper_devoteee.js";
+    import { get_profile } from "@src/helper_approver.js";
     import { goto } from "$app/navigation";
 
     let profile: any = null;
@@ -12,9 +12,7 @@
 
     onMount(async () => {
         try {
-            const response = await get_profile();
-            // defensive: check structure
-            profile = response?.message?.profile ?? null;
+            profile = await get_profile();
         } catch (e) {
             error = "Failed to load profile";
             console.error(e);
@@ -25,7 +23,7 @@
 
     function updateProfile() {
         // navigate to update page (keeps original behavior)
-        goto("/devoteee/profile/update_profile");
+        goto("/dashboard/profile/update_profile");
     }
 </script>
 
@@ -44,7 +42,7 @@
         </div>
     {:else if profile}
         <Card
-            class="w-full max-w-lg p-6 bg-white shadow-xl rounded-3xl transition-transform transform hover:scale-[1.02] hover:shadow-2xl"
+            class="card w-full max-w-lg p-6 bg-white shadow-xl rounded-3xl transition-transform transform hover:scale-[1.02] hover:shadow-2xl"
         >
             <div class="flex flex-col items-center space-y-4">
                 <Avatar

@@ -38,14 +38,14 @@
 
         // prepare payload (fixed aadhar)
         const info = {
-            devoteee_name: name.trim(),
+            approver_name: name.trim(),
             gender,
             dob,
             address: address.trim(),
             aadhar: aadhar.trim(),
         };
 
-        const json = await update_profile(info, "Devoteee");
+        const json = await update_profile(info);
 
         toast(json?.message || "Profile saved.");
         submitted = true;
@@ -59,7 +59,7 @@
         try {
             profle_data = await get_profile();
 
-            name = profle_data.devoteee_name;
+            name = profle_data.approver_name;
             gender = profle_data.gender;
 
             dob = profle_data.dob;
@@ -86,13 +86,6 @@
                     on:click={() => goto("/dashboard")}
                 >
                     Dashboard
-                </button>
-
-                <button
-                    class="btn primary"
-                    on:click={() => goto("/dashboard/mybooking")}
-                >
-                    My Bookings
                 </button>
             </div>
         {:else}

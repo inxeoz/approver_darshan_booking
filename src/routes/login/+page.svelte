@@ -36,7 +36,7 @@
                 Login
             </h2>
 
-            <Badge color="indigo">Devoteee</Badge>
+            <Badge color="indigo">Approver</Badge>
 
             <div>
                 <Label for="phone">Phone</Label>

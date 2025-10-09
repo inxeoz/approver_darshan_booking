@@ -1,9 +1,9 @@
 const COMMON =
   "/api/method/mahakaal.darshan_booking.doctype.darshan_approver_profile.darshan_approver_profile.";
 
-export async function get_profile() {
+export async function get_self_profile() {
   try {
-    const res = await fetch(COMMON + "get_profile", {
+    const res = await fetch(COMMON + "get_self_profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -12,7 +12,8 @@ export async function get_profile() {
     });
 
     const data = await res.json();
-    return data;
+
+    return data?.message?.profile;
   } catch (err) {
     console.error("Error fetching profile details:", err);
 
@@ -214,8 +215,7 @@ export async function login_verify(phone: number, pwd: string) {
       },
       body: JSON.stringify({
         usr: phone + "",
-        // pwd: pwd,
-        pwd: "A12345678Hz",
+        pwd: pwd,
       }),
     });
 

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { Card, Avatar, Badge, Button } from "flowbite-svelte";
-    import { get_profile } from "@src/helper_approver.js";
+    import { get_self_profile } from "@src/helper_approver.js";
     import { goto } from "$app/navigation";
 
     let profile: any = null;
@@ -12,7 +12,7 @@
 
     onMount(async () => {
         try {
-            profile = await get_profile();
+            profile = await get_self_profile();
         } catch (e) {
             error = "Failed to load profile";
             console.error(e);
@@ -53,7 +53,7 @@
                 />
                 <div class="text-center">
                     <h2 class="text-2xl font-bold text-gray-800 mb-1">
-                        {profile.devoteee_name ?? profile.owner ?? profile.name}
+                        {profile.devoteee_name ?? profile.name}
                     </h2>
                     <p class="text-gray-500 text-sm">
                         {profile.doctype ?? "Darshan Devoteee Profile"}

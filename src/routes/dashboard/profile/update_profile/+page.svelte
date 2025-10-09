@@ -1,12 +1,21 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { get_profile, update_profile } from "@src/helper_approver.js";
+    import { get_self_profile, update_profile } from "@src/helper_approver.js";
+    import {
+        Card,
+        Avatar,
+        Badge,
+        Button,
+        Input,
+        Label,
+        Select,
+        Textarea,
+    } from "flowbite-svelte";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
 
     let profle_data: any = null;
 
-    // form model
     let name = "";
     let gender = "";
     let dob = "";
@@ -17,26 +26,11 @@
 
     let loading = false;
     let submitted = false;
-    let serverError = "";
-
-    const errors = () => {
-        const e = {};
-        if (!name.trim()) e.name = "Please enter your full name.";
-        if (!gender) e.gender = "Please select a gender.";
-        if (!dob) e.dob = "Please choose your date of birth.";
-        return e;
-    };
 
     async function handleSubmit(e) {
         e.preventDefault();
-        touched = { name: true, gender: true, dob: true };
-        const eobj = errors();
-        if (Object.keys(eobj).length) return;
-
         loading = true;
-        serverError = "";
 
-        // prepare payload (fixed aadhar)
         const info = {
             approver_name: name.trim(),
             gender,
@@ -49,236 +43,223 @@
 
         toast(json?.message || "Profile saved.");
         submitted = true;
-    }
-
-    function goToMyBookings() {
-        goto("/dashboard/mybooking");
+        loading = false;
     }
 
     onMount(async () => {
-        try {
-            profle_data = await get_profile();
+        profle_data = await get_self_profile();
 
-            name = profle_data.approver_name;
-            gender = profle_data.gender;
-
-            dob = profle_data.dob;
-            address = profle_data.address;
-            aadhar = profle_data.aadhar;
-        } catch (e) {
-            profle_data = "Failed to load profile";
-            console.error(e);
-        } finally {
-            loading = false;
-        }
+        name = profle_data?.approver_name ?? "";
+        gender = profle_data?.gender ?? "";
+        dob = profle_data?.dob ?? "";
+        address = profle_data?.address ?? "";
+        aadhar = profle_data?.aadhar ?? "";
     });
 </script>
 
-<div class="page">
-    <div class="card" role="region" aria-labelledby="title">
-        {#if submitted}
-            <div class="submitted">
-                <h3>Successfully updated profile details</h3>
-
-                <button
-                    pill
-                    class="btn primary"
-                    on:click={() => goto("/dashboard")}
-                >
-                    Dashboard
-                </button>
+<div class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+    {#if submitted}
+        <Card class="w-full max-w-2xl p-10">
+            <div class="flex items-center gap-4">
+                <div class="flex-shrink-0">
+                    <Avatar
+                        size="xl"
+                        stacked={false}
+                        rounded={true}
+                        src={profle_data?.avatar || undefined}
+                        alt="Profile avatar"
+                    />
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-semibold">Profile updated</h3>
+                    <p class="text-sm text-gray-600 mt-1">
+                        Your profile details have been saved successfully.
+                    </p>
+                </div>
             </div>
-        {:else}
-            <h2 class="heading">Update Your Profile</h2>
-            <p class="copy">
-                Please provide a few more details to finish your registration.
-            </p>
 
-            <form on:submit|preventDefault={handleSubmit} novalidate>
-                <!-- Full Name -->
-                <label class="label" for="name">Full Name</label>
-                <input
-                    id="name"
-                    class="input"
-                    class:invalid={touched.name && errors().name}
-                    type="text"
-                    placeholder="John Doe"
-                    bind:value={name}
-                    on:blur={() => (touched.name = true)}
-                    aria-invalid={touched.name && errors().name
-                        ? "true"
-                        : "false"}
-                />
-                {#if touched.name && errors().name}
-                    <div class="error">{errors().name}</div>
-                {/if}
-
-                <!-- Gender -->
-                <label class="label" for="gender">Gender</label>
-                <select
-                    id="gender"
-                    class="input"
-                    class:invalid={touched.gender && errors().gender}
-                    bind:value={gender}
-                    on:blur={() => (touched.gender = true)}
-                    aria-invalid={touched.gender && errors().gender
-                        ? "true"
-                        : "false"}
+            <div class="mt-6 flex gap-3 justify-end">
+                <Button onclick={() => goto("/dashboard")} pill>
+                    Go to Dashboard
+                </Button>
+            </div>
+        </Card>
+    {:else}
+        <Card class="w-full max-w-4xl p-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <aside
+                    class="md:col-span-1 flex flex-col items-center text-center p-4"
                 >
-                    <option value="" disabled>Select Gender</option>
-                    <option value="female">Female</option>
-                    <option value="male">Male</option>
-                    <option value="non-binary">Non-binary</option>
-                    <option value="prefer-not-to-say">Prefer not to say</option>
-                </select>
-                {#if touched.gender && errors().gender}
-                    <div class="error">{errors().gender}</div>
-                {/if}
+                    <Avatar
+                        size="2xl"
+                        rounded={true}
+                        src={profle_data?.avatar || undefined}
+                        alt="User avatar"
+                    />
+                    <h2 class="mt-4 text-xl font-semibold">
+                        Update Your Profile
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-600">
+                        A few details to complete your approver account.
+                    </p>
+                    <Badge class="mt-4" color="info">Approver</Badge>
+                </aside>
 
-                <!-- Date of Birth -->
-                <label class="label" for="dob">Date of Birth</label>
+                <section class="md:col-span-2">
+                    <form
+                        on:submit|preventDefault={handleSubmit}
+                        novalidate
+                        class="space-y-5"
+                    >
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <Label for="name">Full name</Label>
+                                <Input
+                                    id="name"
+                                    type="text"
+                                    placeholder="John Doe"
+                                    bind:value={name}
+                                    on:blur={() => (touched.name = true)}
+                                    aria-required="false"
+                                    class="mt-1"
+                                />
+                            </div>
 
-                <input
-                    id="dob"
-                    class="input"
-                    class:invalid={touched.dob && errors().dob}
-                    type="date"
-                    bind:value={dob}
-                    on:blur={() => (touched.dob = true)}
-                    aria-invalid={touched.dob && errors().dob
-                        ? "true"
-                        : "false"}
-                />
+                            <div>
+                                <Label for="gender">Gender</Label>
+                                <Select
+                                    id="gender"
+                                    bind:value={gender}
+                                    on:blur={() => (touched.gender = true)}
+                                    class="mt-1"
+                                >
+                                    <option value="" disabled selected
+                                        >Select Gender</option
+                                    >
+                                    <option value="female">Female</option>
+                                    <option value="male">Male</option>
+                                    <option value="non-binary"
+                                        >Non-binary</option
+                                    >
+                                    <option value="prefer-not-to-say"
+                                        >Prefer not to say</option
+                                    >
+                                </Select>
+                            </div>
+                        </div>
 
-                {#if touched.dob && errors().dob}
-                    <div class="error">{errors().dob}</div>
-                {/if}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <Label for="dob">Date of birth</Label>
+                                <Input
+                                    id="dob"
+                                    type="date"
+                                    bind:value={dob}
+                                    class="mt-1"
+                                />
+                            </div>
 
-                <!-- Aadhar -->
-                <label class="label" for="aadhar">Aadhar</label>
-                <input
-                    id="aadhar"
-                    class="input"
-                    type="text"
-                    placeholder="1234 5678 9012"
-                    bind:value={aadhar}
-                    inputmode="numeric"
-                    maxlength="20"
-                    aria-label="Aadhar number (optional)"
-                />
+                            <div>
+                                <Label for="aadhar">Aadhar (optional)</Label>
+                                <Input
+                                    id="aadhar"
+                                    type="text"
+                                    placeholder="1234 5678 9012"
+                                    bind:value={aadhar}
+                                    inputmode="numeric"
+                                    maxlength="20"
+                                    aria-label="Aadhar number"
+                                    class="mt-1"
+                                />
+                            </div>
+                        </div>
 
-                <!-- Address -->
-                <label class="label" for="address">Address</label>
-                <textarea
-                    id="address"
-                    class="input textarea"
-                    placeholder="123 Main St, Anytown"
-                    rows="3"
-                    bind:value={address}
-                ></textarea>
+                        <div>
+                            <Label for="address">Address</Label>
+                            <Textarea
+                                id="address"
+                                rows="3"
+                                placeholder="123 Main St, Anytown"
+                                bind:value={address}
+                                class="mt-1"
+                            />
+                        </div>
 
-                {#if serverError}
-                    <div class="error" role="alert">{serverError}</div>
-                {/if}
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="text-sm text-gray-500">
+                                <span
+                                    >Fields can be updated later from your
+                                    profile settings.</span
+                                >
+                            </div>
 
-                <button class="btn primary" type="submit" disabled={loading}>
-                    {#if loading}
-                        Submitting…
-                    {:else}
-                        Update Profile
-                    {/if}
-                </button>
-            </form>
-        {/if}
-    </div>
+                            <div class="flex items-center gap-3">
+                                <Button
+                                    type="button"
+                                    outline
+                                    on:click={() => {
+                                        name = profle_data?.approver_name ?? "";
+                                        gender = profle_data?.gender ?? "";
+                                        dob = profle_data?.dob ?? "";
+                                        address = profle_data?.address ?? "";
+                                        aadhar = profle_data?.aadhar ?? "";
+                                    }}
+                                >
+                                    Reset
+                                </Button>
+
+                                <Button type="submit" disabled={loading} pill>
+                                    {#if loading}
+                                        <svg
+                                            class="animate-spin h-4 w-4 mr-2"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            aria-hidden="true"
+                                        >
+                                            <circle
+                                                class="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                stroke-width="4"
+                                            ></circle>
+                                            <path
+                                                class="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                            ></path>
+                                        </svg>
+                                        Saving…
+                                    {:else}
+                                        Update Profile
+                                    {/if}
+                                </Button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </Card>
+    {/if}
 </div>
 
 <style>
-    /* (same CSS you already had—kept for brevity) */
-    :global(html, body) {
-        height: 100%;
-    }
-    .page {
-        min-height: 100vh;
-        background: #f4f6f8;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-    }
-    .card {
-        width: min(640px, 92vw);
-        background: #ecf3f2;
-        border-radius: 14px;
-        box-shadow: 0 10px 28px rgba(16, 24, 40, 0.12);
-        padding: 36px 40px 32px;
-    }
-
     .heading {
-        text-align: center;
-        margin: 18px 0 6px;
-        font-size: 20px;
-        font-weight: 700;
-        color: #111827;
+        font-size: 1.25rem;
+        font-weight: 600;
     }
     .copy {
-        text-align: center;
-        margin: 0 0 14px;
         color: #6b7280;
-        font-size: 14px;
-    }
-    form {
-        margin-top: 6px;
-    }
-    .label {
-        display: block;
-        margin: 14px 0 6px;
-        font-size: 13px;
-        color: #4b5563;
-    }
-    .input {
-        width: 100%;
-        height: 44px;
-        padding: 0 14px;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        background: #fff;
-        font-size: 14px;
-        outline: none;
-        transition:
-            box-shadow 0.15s,
-            border-color 0.15s;
-    }
-    .textarea {
-        height: auto;
-        padding: 10px 14px;
-        resize: vertical;
-    }
-    .input:focus {
-        border-color: #2151ea;
-        box-shadow: 0 0 0 3px rgba(33, 81, 234, 0.15);
-    }
-    .input.invalid {
-        border-color: #dc2626;
-    }
-    .error {
-        margin-top: 6px;
-        font-size: 12px;
-        color: #b91c1c;
+        margin-top: 0.25rem;
     }
     .btn.primary {
-        width: 100%;
-        height: 46px;
-        margin-top: 18px;
-        border: 0;
-        border-radius: 10px;
-        background: #2151ea;
-        color: #fff;
-        font-weight: 600;
-        font-size: 15px;
-        cursor: pointer;
+        /* keep existing style hook if your project uses it */
     }
-    .btn.primary[disabled] {
-        opacity: 0.7;
-        cursor: default;
+    @media (min-width: 768px) {
+        .flowbite-card {
+            padding: 1.5rem;
+        }
     }
 </style>

@@ -76,7 +76,7 @@ export async function get_appointment(appointment_id: string) {
   }
 }
 
-export async function update_profile(info: {}, login_as: string) {
+export async function update_profile(info: {}) {
   try {
     const res = await fetch(COMMON + "update_profile", {
       method: "POST",

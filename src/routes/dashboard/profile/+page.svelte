@@ -53,7 +53,7 @@
                 />
                 <div class="text-center">
                     <h2 class="text-2xl font-bold text-gray-800 mb-1">
-                        {profile.devoteee_name ?? profile.name}
+                        {profile.approver_name ?? profile.name}
                     </h2>
                     <p class="text-gray-500 text-sm">
                         {profile.doctype ?? "Darshan Devoteee Profile"}

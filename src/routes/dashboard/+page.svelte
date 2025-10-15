@@ -294,31 +294,33 @@
                                                     >Open</Button
                                                 >
 
-                                                <Button
-                                                    color="success"
-                                                    class="cursor-pointer"
-                                                    size="xs"
-                                                    onclick={async () => {
-                                                        // quick approve single booking via helper
-                                                        if (!b.name) return;
-                                                        await approveSingle(
-                                                            b.name,
-                                                        );
-                                                    }}>Approve</Button
-                                                >
+                                                {#if b.workflow_state === "Pending"}
+                                                    <Button
+                                                        color="success"
+                                                        class="cursor-pointer"
+                                                        size="xs"
+                                                        onclick={async () => {
+                                                            // quick approve single booking via helper
+                                                            if (!b.name) return;
+                                                            await approveSingle(
+                                                                b.name,
+                                                            );
+                                                        }}>Approve</Button
+                                                    >
 
-                                                <Button
-                                                    color="failure"
-                                                    class="cursor-pointer"
-                                                    size="xs"
-                                                    onclick={async () => {
-                                                        // quick reject single booking via helper
-                                                        if (!b.name) return;
-                                                        await rejectSingle(
-                                                            b.name,
-                                                        );
-                                                    }}>Reject</Button
-                                                >
+                                                    <Button
+                                                        color="failure"
+                                                        class="cursor-pointer"
+                                                        size="xs"
+                                                        onclick={async () => {
+                                                            // quick reject single booking via helper
+                                                            if (!b.name) return;
+                                                            await rejectSingle(
+                                                                b.name,
+                                                            );
+                                                        }}>Reject</Button
+                                                    >
+                                                {/if}
                                             </div>
                                         </td>
                                     </tr>

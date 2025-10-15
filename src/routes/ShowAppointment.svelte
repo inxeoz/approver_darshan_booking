@@ -94,6 +94,14 @@
     {:else if data}
         <div class="grid grid-cols-2 gap-3 mb-4">
             <div>
+                <strong>Primary Devotee:</strong>
+
+                <Badge color="green">
+                    {data.primary_devoteee_name ?? "—"}
+                </Badge>
+            </div>
+
+            <div>
                 <strong>Appointment ID:</strong>
                 {data.name ?? data.appointment_id ?? "—"}
             </div>
@@ -158,7 +166,7 @@
                 <ul class="divide-y divide-gray-200 border rounded-md">
                     {#each data.companions as c}
                         <li class="flex justify-between items-center p-2">
-                            <div class="left_column w-1/3">
+                            <div class="w-1/3">
                                 <div class="font-semibold text-gray-800">
                                     {c.companion_name ?? "Unknown"}
                                 </div>
@@ -166,12 +174,12 @@
                                     {c.companion_gender ?? ""}
                                 </div>
                             </div>
-                            <div class="middle_column w-1/6">
+                            <div class="w-1/6">
                                 <div class="text-gray-800 font-medium">
                                     Age {c.companion_age ?? "—"}
                                 </div>
                             </div>
-                            <div class="right_column w-1/3">
+                            <div class=" w-1/3">
                                 phone :
                                 <Badge color="green">
                                     {c.companion_phone ?? "—"}
@@ -188,13 +196,29 @@
         </div>
 
         <div>
-            <Button
-                color="light"
-                size="sm"
-                onclick={() => (showRaw = !showRaw)}
-            >
-                {showRaw ? "Hide JSON" : "Show raw JSON"}
-            </Button>
+            <div>
+                <Button
+                    color="light"
+                    size="sm"
+                    onclick={() => (showRaw = !showRaw)}
+                >
+                    {showRaw ? "Hide JSON" : "Show raw JSON"}
+                </Button>
+
+                <Button
+                    color="light"
+                    size="sm"
+                    onclick={() => {
+                        navigator.clipboard
+                            .writeText(safeStringify(data, 2))
+                            .then(() => alert("JSON copied to clipboard!"))
+                            .catch(() => alert("Failed to copy JSON"));
+                    }}
+                >
+                    Copy JSON
+                </Button>
+            </div>
+
             {#if showRaw}
                 <pre
                     class="bg-gray-900 text-gray-100 mt-2 p-2 rounded overflow-auto max-h-60 text-sm">

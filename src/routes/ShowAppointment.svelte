@@ -3,13 +3,15 @@
     import { Button, Modal, Badge } from "flowbite-svelte";
     import { formatDateTime } from "@src/utils.js";
 
+    import {
+        get_appointment,
+        approve_appointment,
+        reject_appointment,
+    } from "@src/helper_approver.js";
+
     let workflow_state = "Demo";
 
     export let appointmentId: string;
-
-    export let fetchAppointmentCall: Function;
-    export let approveCall; // this will receive the function
-    export let rejectCall; // this will receive the function
 
     const dispatch = createEventDispatcher();
 
@@ -24,7 +26,7 @@
         loading = true;
         error = null;
         try {
-            const payload = await fetchAppointmentCall(appointmentId);
+            const payload = await get_appointment(appointmentId);
             data = payload?.message ?? payload;
             workflow_state = data.workflow_state;
         } catch (err: any) {
@@ -228,7 +230,7 @@
                     color="primary"
                     pill
                     onclick={async () => {
-                        rejectCall(appointmentId);
+                        reject_appointment(appointmentId);
                         await fetchAppointment();
                     }}>Reject</Button
                 >
@@ -236,7 +238,7 @@
                     color="green"
                     pill
                     onclick={async () => {
-                        approveCall(appointmentId);
+                        approve_appointment(appointmentId);
                         await fetchAppointment();
                     }}>Approve</Button
                 >

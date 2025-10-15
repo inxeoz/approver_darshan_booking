@@ -296,6 +296,7 @@
 
                                                 <Button
                                                     color="success"
+                                                    class="cursor-pointer"
                                                     size="xs"
                                                     onclick={async () => {
                                                         // quick approve single booking via helper
@@ -308,6 +309,7 @@
 
                                                 <Button
                                                     color="failure"
+                                                    class="cursor-pointer"
                                                     size="xs"
                                                     onclick={async () => {
                                                         // quick reject single booking via helper

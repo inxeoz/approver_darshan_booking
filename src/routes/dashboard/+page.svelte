@@ -327,19 +327,18 @@
                 </div>
             </div>
         </div>
-
-        <!-- Appointment modal -->
-        {#if show && selectedId}
-            <ShowAppointment
-                appointmentId={selectedId}
-                rejectCall={reject_appointment}
-                approveCall={approve_appointment}
-                on:close={handleModalClose}
-                fetchAppointmentCall={get_appointment}
-            />
-        {/if}
     </div>
 </div>
+
+{#if show && selectedId}
+    <ShowAppointment
+        rejectCall={reject_appointment}
+        approveCall={approve_appointment}
+        appointmentId={selectedId}
+        on:close={handleModalClose}
+        fetchAppointmentCall={get_appointment}
+    />
+{/if}
 
 <style>
     /* small layout tweaks to match the screenshot's look */

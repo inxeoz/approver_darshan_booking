@@ -270,13 +270,13 @@
                                         <td class="p-3 font-medium">{b.name}</td
                                         >
                                         <td class="p-3 text-sm text-slate-600"
-                                            >{b.darshan_type}</td
+                                            >{b.appointment_type}</td
                                         >
                                         <td class="p-3"
-                                            >{b.devotee_name ?? b.name}</td
+                                            >{b.primary_devoteee_name}</td
                                         >
                                         <td class="p-3 text-sm text-slate-500"
-                                            >{b.darshan_date} @ {b.darshan_time}</td
+                                            >{b.appointment_date}</td
                                         >
                                         <td class="p-3"
                                             ><Badge

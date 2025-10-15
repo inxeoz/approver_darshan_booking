@@ -15,13 +15,14 @@ export type Status =
 // };
 export type Booking = {
   name: string; // display title
-  darshan_type: string; // e.g. "Shigra Darshan"
-  darshan_time: string; // e.g. "10:00:00" (or "10:00 AM")
+  appointment_type: string; // e.g. "Shigra Darshan"
   workflow_state: Status | string;
-  darshan_date: string; // ISO date string (YYYY-MM-DD or full ISO)
-  timeNote?: string; // e.g. "Flexible Time"
+  appointment_date: string; // ISO date string (YYYY-MM-DD or full ISO)
+  slot_start_time: string; // e.g. "Flexible Time"
+  slot_end_time: string; // e.g. "Flexible Time"
   darshan_companion?: Companion[];
   attender?: string | null;
+  primary_devoteee_name: string;
 };
 
 // ---- Types ----

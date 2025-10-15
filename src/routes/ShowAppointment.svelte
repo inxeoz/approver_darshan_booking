@@ -21,10 +21,6 @@
     let open = true;
 
     async function fetchAppointment() {
-        if (!appointmentId) {
-            error = "No appointment id provided.";
-            return;
-        }
         loading = true;
         error = null;
         try {

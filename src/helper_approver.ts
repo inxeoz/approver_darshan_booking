@@ -1,14 +1,24 @@
+import { get } from "svelte/store";
+import { auth_token } from "./store.js";
+
+const isProd = import.meta.env.PROD;
+const API_BASE = import.meta.env.VITE_TARGET;
+console.log(`Running in ${isProd ? 'production' : 'development'} mode with API_BASE=${API_BASE}`);
+
+
 const COMMON =
-  "/api/method/mahakaal.darshan_booking.doctype.darshan_approver_profile.darshan_approver_profile.";
+  `${API_BASE}/api/method/mahakaal.darshan_booking.doctype.darshan_approver_profile.darshan_approver_profile.`;
+
 
 export async function get_self_profile() {
   try {
     const res = await fetch(COMMON + "get_self_profile", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
-      credentials: "include",
+  
     });
 
     const data = await res.json();
@@ -31,9 +41,10 @@ export async function get_appointment_list(
     const res = await fetch(COMMON + "get_appointment_list", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
-      credentials: "include",
+  
       body: JSON.stringify({
         limitStart: limitStart,
         pageLength: pageLength,
@@ -57,7 +68,8 @@ export async function get_appointment(appointment_id: string) {
     const res = await fetch(COMMON + "get_appointment", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
       body: JSON.stringify({
         appointment_id: appointment_id,
@@ -81,7 +93,8 @@ export async function update_profile(info: {}) {
     const res = await fetch(COMMON + "update_profile", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
       body: JSON.stringify({
         info: info,
@@ -101,9 +114,10 @@ export async function login_request_approver(phone: number) {
   try {
     const res = await fetch(COMMON + "login_request", {
       method: "POST",
-      credentials: "include",
+  
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
       body: JSON.stringify({
         phone: phone,
@@ -123,9 +137,10 @@ export async function get_appointment_stats() {
   try {
     const res = await fetch(COMMON + "get_appointment_stats", {
       method: "POST",
-      credentials: "include",
+  
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
     });
 
@@ -142,9 +157,10 @@ export async function approve_appointment(appointment_id: string) {
   try {
     const res = await fetch(COMMON + "approve_appointment", {
       method: "POST",
-      credentials: "include",
+  
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
 
       body: JSON.stringify({
@@ -165,9 +181,10 @@ export async function reject_appointment(appointment_id: string) {
   try {
     const res = await fetch(COMMON + "reject_appointment", {
       method: "POST",
-      credentials: "include",
+  
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
 
       body: JSON.stringify({
@@ -189,7 +206,8 @@ export async function registration_approver(phone: number) {
     const res = await fetch(COMMON + "create_approver", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
       body: JSON.stringify({
         phone: phone,
@@ -207,11 +225,12 @@ export async function registration_approver(phone: number) {
 
 export async function login_verify(phone: number, pwd: string) {
   try {
-    const res = await fetch("/api/method/login", {
+    const res = await fetch(`${API_BASE}/api/method/login`, {
       method: "POST",
-      credentials: "include",
+  
       headers: {
-        "Content-Type": "application/json",
+          "Content-Type": "application/json",
+         "Authorization" : get(auth_token)
       },
       body: JSON.stringify({
         usr: phone + "",

@@ -1,3 +1,4 @@
+
 import { writable } from "svelte/store";
 
 export interface Action {
@@ -14,3 +15,5 @@ const defaultActions: Action[] = [
 ];
 
 export const actionsStore = writable<Action[]>(defaultActions);
+export const user_logged_in = writable(false);
+export const auth_token = writable("")

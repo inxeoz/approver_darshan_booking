@@ -6,24 +6,27 @@
 
     import { login_verify } from "@src/helper_approver.js";
     import { toast } from "svelte-sonner";
+    import { get_auth_token } from "@src/helper.js";
+    import { user_logged_in } from "@src/store.js";
 
     // phone as string to allow leading + / 0 etc
     export let phone = 0;
     let password: string = "Mpsedc123";
     let loading: boolean = false;
 
+
     async function login(e: SubmitEvent) {
         e?.preventDefault();
         loading = true;
 
-        const json_data = await login_verify(phone, password);
+        const json_data = await get_auth_token(phone);
 
-        if (json_data?.full_name) {
+        if (json_data?.message) {
             toast.success("Login successful");
             await goto("/dashboard");
+            user_logged_in.set(true);
         } else {
-            // show API message or generic error
-            toast.error(json_data || "Login failed");
+            toast.error("Login failed " + JSON.stringify(json_data));
             loading = false;
         }
     }

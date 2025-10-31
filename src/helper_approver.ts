@@ -1,9 +1,12 @@
 import { get } from "svelte/store";
 import { auth_token } from "./store.js";
 
-const isProd = import.meta.env.PROD;
-const API_BASE = import.meta.env.VITE_TARGET;
+
+import { API_BASE, isProd } from '$lib/env.js';
+
 console.log(`Running in ${isProd ? 'production' : 'development'} mode with API_BASE=${API_BASE}`);
+                         // use relative path in dev (Vite proxy)
+
 
 
 const COMMON =

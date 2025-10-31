@@ -31,7 +31,10 @@
     "svelte": "^5.0.0"
   },
   "devDependencies": {
+    "@iconify/svelte": "^5.0.2",
     "@sveltejs/adapter-auto": "^6.0.0",
+    "@sveltejs/adapter-node": "^5.4.0",
+    "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/kit": "^2.22.0",
     "@sveltejs/package": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^6.0.0",
@@ -52,10 +55,7 @@
     "svelte"
   ],
   "dependencies": {
-    "@beyonk/svelte-notifications": "^4.3.0",
-    "@sveltejs/adapter-node": "^5.4.0",
-    "daisyui": "^5.1.27",
-    "svelte-notifications": "^0.9.98",
+    "serve": "^14.2.1",
     "svelte-sonner": "^1.0.5"
   }
 }

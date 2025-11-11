@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-# Load .env file if exists
-if [ -f ".env" ]; then
+# Load .env file if exists and not overridden
+if [ -f ".env" ] && [ -z "$DOCKER_OVERRIDE" ]; then
   while IFS='=' read -r key value; do
     export "$key"="$value"
   done < .env

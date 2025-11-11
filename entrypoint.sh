@@ -1,6 +1,13 @@
 #!/bin/sh
 set -e
 
+# Load .env file if exists
+if [ -f ".env" ]; then
+  while IFS='=' read -r key value; do
+    export "$key"="$value"
+  done < .env
+fi
+
 # Path to the static build directory
 if [ -d "/app" ]; then
   TARGET_PATH="/app/build"

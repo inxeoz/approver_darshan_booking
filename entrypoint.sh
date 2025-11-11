@@ -2,7 +2,11 @@
 set -e
 
 # Path to the static build directory
-TARGET_PATH="/app/build"
+if [ -d "/app" ]; then
+  TARGET_PATH="/app/build"
+else
+  TARGET_PATH="./build"
+fi
 
 echo "window.__ENV__ = {" > ${TARGET_PATH}/env-config.js
 
